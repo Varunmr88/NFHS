@@ -1,0 +1,55 @@
+---
+title: "NFHS Data Analysis"
+author: "Varun"
+date: "`r Sys.Date()`"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Documentation
+
+The National Family Health Survey (NFHS) is a large-scale, 
+            multi-round survey conducted in a representative sample of households throughout India. 
+            Three rounds of the survey have been conducted since the first survey in 1992-93.
+            This dashboard uses district factsheet data of the latest NFHS-5 data held in 2019-2020. 
+            The dashboard gives state wise filtering and display bar chart of health indicators
+            district ise. This will help in easy searching of the Data to 
+            find district level indicators.
+            See the Link for data source:
+            <https://www.kaggle.com/datasets/kmldas/india-national-family-health-survey-nfhs?resource=download>.
+
+
+## Description of Shiny App.
+
+- Link for the shiny app . See <https://varunmr.shinyapps.io/NFHS/>
+- Select the State then indicator you are interested.
+- A barplot output with district values will be shown. It filters the state and select indicator column at server.
+
+## Slide with R Output
+
+```{r include=FALSE}
+library(readr)
+library(tidyverse)
+```
+
+
+```{r , echo=TRUE}
+nfhs <- read_csv("D:/Data Science/R/John Hopkins/Data Products/Shiny/nfhs/data/NFHS_5_India_Districts_Factsheet_Data.csv")
+ nfhs1<-nfhs%>%
+           filter(`State/UT`=="Bihar")%>%select(`Men age 15 years and above who consume alcohol (%)`,1:2)
+        ggplot(data=nfhs1,aes(x=reorder(`District Names`,`Men age 15 years and above who consume alcohol (%)`),y=`Men age 15 years and above who consume alcohol (%)`,fill=`District Names`))+
+            geom_bar(stat = "identity",show.legend = FALSE)+
+            geom_text(nfhs1,mapping=aes(label=`Men age 15 years and above who consume alcohol (%)`))+
+            coord_flip()+
+            labs(x="District Names",y="Men age 15 years and above who consume alcohol (%)")+
+            theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                                                             panel.background = element_blank(),axis.text.x = element_blank(),
+                  axis.ticks.x = element_blank(),axis.text = element_text(face="bold"))
+```
+
+## Conclusion
+
+The app really helps to quickly see district indicators without going through district factsheet pdf of every district.
